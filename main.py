@@ -49,18 +49,16 @@ class Xianyu:
             page.refresh()
 
         try:
-            re.match(r'([a-f0-9]+)_\d+', _m_h5_tk)
+            match = re.match(r'([a-f0-9]+)_\d+', _m_h5_tk)
+            if match:
+                token = match.group(1)
+                print(f"匹配到的token: {token}")
+            else:
+                token = ''
+                print("未找到匹配的token")
         except TypeError as e:
             print(f"未找到匹配期望token: {e}")
-            page.refresh()
-        match = re.match(r'([a-f0-9]+)_\d+', _m_h5_tk)
-
-        if match:
-            token = match.group(1)
-            print(f"匹配到的token: {token}")
-        else:
             token = ''
-            print("未找到匹配的token")
         
         return token,cookies
 
