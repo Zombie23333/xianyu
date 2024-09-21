@@ -6,6 +6,9 @@ import re
 import hashlib
 import pandas as pd
 import threading
+from fastapi import FastAPI, HTTPException
+
+app = FastAPI()
 
 class Xianyu:
     def __init__(self):
@@ -45,6 +48,11 @@ class Xianyu:
         if not _m_h5_tk:
             page.refresh()
 
+        try:
+            re.match(r'([a-f0-9]+)_\d+', _m_h5_tk)
+        except TypeError as e:
+            print(f"未找到匹配期望token: {e}")
+            page.refresh()
         match = re.match(r'([a-f0-9]+)_\d+', _m_h5_tk)
 
         if match:
@@ -73,7 +81,7 @@ class Xianyu:
         
         return sign
 
-    def get_data(self,page:int):
+    def get_data(self,page:int) -> json:
 
         data = {"pageNumber":page,"keyword":"macbook","fromFilter":False,"rowsPerPage":30,"sortValue":"","sortField":"","customDistance":"","gps":"","propValueStr":{},"customGps":""}
         self.data = json.dumps(data).replace(' ', '')
@@ -233,19 +241,14 @@ class Xianyu:
         filename = f'test_{page_number}.json'
         self.save_data(data, filename)
 
+@app.get("/fetch_data/")
+def fetch_data(page_number: int):
+    xianyu = Xianyu()
+    try:
+        return xianyu.get_data(page_number)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == '__main__':
-    
-    threads = []
-    
-    for page_number in range(1, 51):  # 从 1 到 50 页
-        xianyu = Xianyu()
-        # 使用 xianyu 实例的 save_data_thread 方法
-        thread = threading.Thread(target=xianyu.main, args=(page_number,))
-        threads.append(thread)
-        thread.start()
-
-    # 等待所有线程完成
-    for thread in threads:
-        thread.join()
-
-    print("All data has been saved.")
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
