@@ -257,7 +257,7 @@ class Xianyu:
 
         try:
             data = response.json()
-            print('数据已返回：',data)
+            print('数据已返回')
             return data
         except ValueError as e:
             print('JSON 解析失败，返回结果：', response.text)
@@ -272,8 +272,8 @@ class Xianyu:
         soldPrice = itemDo.get('soldPrice',{})
 
         if itemList != '未知':
-            print('商品报价：',soldPrice)
-            print('型号信息：',itemList)
+            # print('商品报价：',soldPrice)
+            # print('型号信息：',itemList)
   
             # 将列表转换为 DataFrame
             df = pd.DataFrame(itemList)
@@ -331,6 +331,26 @@ class Xianyu:
             filename = f'userinfo{item}.json'
             self.save_data(userInfo, filename)
 
+    def scrape_itemDetails(self, page_number=1):
+        data = self.get_data(page_number)
+        itemIds = self.get_itemId(data)
+        
+        # 用于存储所有 DataFrame 的列表
+        df_list = []
+
+        for item in itemIds:
+            data = self.get_itemDetails(item)
+            df = xianyu.parse_Details(item, data)
+            df_list.append(df)
+            print(f'{item}已保存')
+        # 拼接所有 DataFrame
+        if df_list:
+            concatenated_df = pd.concat(df_list, ignore_index=True)
+            print(concatenated_df)
+            concatenated_df.to_csv('./data/outpu.csv',encoding='utf-8')
+        else:
+            print("没有数据可拼接。")
+
 
 
 @app.get("/fetch_data/")
@@ -353,4 +373,4 @@ if __name__ == '__main__':
     # import uvicorn
     # uvicorn.run(app, host="0.0.0.0", port=8000)   
     xianyu = Xianyu()
-    data = xianyu.get_itemDetails('624651727381')
+    xianyu.scrape_itemDetails(1)
