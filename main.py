@@ -60,7 +60,8 @@ class Xianyu:
             except TypeError as e:
                 print(f"第{attempt+1}次未找到匹配期望token: {e}")
                 token = ''
-        
+            time.sleep(1)
+            page.refresh()
         return token,cookies
 
     def encrypt(self, token, timestamp, data):
