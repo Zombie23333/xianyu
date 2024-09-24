@@ -35,7 +35,7 @@ class Xianyu:
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0',
 }
 
-    def get_token(self):
+    def get_token(self,url='https://www.goofish.com/search?q=macbook'):
         
         # 默认d模式创建对象
         page = WebPage()
@@ -132,7 +132,7 @@ class Xianyu:
         with open(f'./data/{file_name}', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
-    def get_userInfo(self,itemId:str):
+    def get_userInfo(self,itemId:str) -> json:
         
         url = f'https://www.goofish.com/item?id={itemId}'
 
@@ -184,17 +184,27 @@ class Xianyu:
             data=data,
         )
 
-        if response.json():
+        try:
             data = response.json()
-            itemCount = data['data']['sellerDO']['itemCount']
-            city = data["data"]["sellerDO"]["city"]
-            nick = data["data"]["sellerDO"]["nick"]
-            print('卖出件数：',itemCount,"卖家昵称:",nick,'城市：',city)
-            seller_data = {'卖出件数':itemCount,'卖家昵称':nick,'城市':city}
-            
-        return seller_data
+        except ValueError as e:
+            print('JSON 解析失败，返回结果：', response.text)
+            return ''
 
-    def get_itemId(self,data:json):
+        # 使用 dict.get() 方法来避免 KeyError
+        seller_data = data.get('data', {}).get('sellerDO', {})
+
+        itemCount = seller_data.get('itemCount', '未知')
+        city = seller_data.get('city', '未知')
+        nick = seller_data.get('nick', '未知')
+
+        if itemCount != '未知' or city != '未知' or nick != '未知':
+            print('卖出件数：', itemCount, "卖家昵称:", nick, '城市：', city)
+            return {'卖出件数': itemCount, '卖家昵称': nick, '城市': city}
+        else:
+            print('抓取失败，数据不完整')
+            return response.text
+
+    def get_itemId(self,data:json) -> list:
         
         itemIds = []
         if data:
@@ -236,10 +246,13 @@ class Xianyu:
         # 将 DataFrame 保存到 Excel 文件中
         df.to_excel('./data/seller_data.xlsx', index=False)
 
-    def main(self, page_number):
+    def scrape_userInfo(self, page_number=1):
         data = self.get_data(page_number)
-        filename = f'test_{page_number}.json'
-        self.save_data(data, filename)
+        itemIds = self.get_itemId(data)
+        for item in itemIds:
+            userInfo = self.get_userInfo(item)
+            filename = f'userinfo{item}.json'
+            self.save_data(userInfo, filename)
 
 @app.get("/fetch_data/")
 def fetch_data(page_number: int):
@@ -249,6 +262,14 @@ def fetch_data(page_number: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get('/fetch_userInfo/')
+def fetch_userInfo(ItemId:str):
+    xianyu = Xianyu()
+    try:
+        return xianyu.get_userInfo(ItemId)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)   
