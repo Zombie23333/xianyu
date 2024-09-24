@@ -204,12 +204,89 @@ class Xianyu:
             print('抓取失败，数据不完整')
             return response.text
 
+    def get_itemDetails(self,itemId:str) -> json:
+
+        url = f'https://www.goofish.com/item?id={itemId}'
+
+        cookies = {
+        '_m_h5_tk': '88e05480d6cc21133a9854b3f6c023f0_1725343615524',
+        '_m_h5_tk_enc': 'c07401e74bc18be181c71eccdb1eee19',}
+
+        token,cookies = self.get_token(url)
+
+        timestamp = int(time.time()*1000)
+        timestamp_test = 1725322011710
+
+
+        itemId = {"itemId":itemId}
+        itemId = json.dumps(itemId).replace(' ', '')
+        data = {
+        'data': itemId,
+}
+        
+        sign = self.encrypt(token, timestamp, itemId) # 21f87a4d7daf3607d9f217af9d729d95
+        print(f"sign: {sign}")
+
+
+        params = {
+            'jsv': '2.7.2',
+            'appKey': '12574478',
+            't': timestamp,
+            'sign': sign,
+            'v': '1.0',
+            'type': 'originaljson',
+            'accountSite': 'xianyu',
+            'dataType': 'json',
+            'timeout': '20000',
+            'AntiCreep': 'true',
+            'AntiFlool': 'true',
+            'api': 'mtop.taobao.idle.pc.detail',
+            'sessionOption': 'AutoLoginOnly',
+            'spm_cnt': 'a21ybx.item.0.0',
+            'spm_pre': 'a21ybx.search.searchFeedList.1.587c3da696Pi8q',
+            'log_id': '587c3da696Pi8q',
+        }
+
+        response = requests.post(
+           'https://h5api.m.goofish.com/h5/mtop.taobao.idle.pc.detail/1.0/',
+            params=params,
+            cookies=cookies,
+            headers=self.headers,
+            data=data,
+        )
+
+        try:
+            data = response.json()
+            print('数据已返回：',data)
+            return data
+        except ValueError as e:
+            print('JSON 解析失败，返回结果：', response.text)
+            return ''
+
+    def parse_Details(self,itemId:str,data:json):
+        
+        # 路径 ["data"]["itemDO"]["itemLabelExtList"][2]["properties"]
+        # 使用 dict.get() 方法来避免 KeyError
+        itemDo = data.get('data', {}).get('itemDO', {})
+        itemList = itemDo.get('itemLabelExtList', '未知')
+        soldPrice = itemDo.get('soldPrice',{})
+
+        if itemList != '未知':
+            print('商品报价：',soldPrice)
+            print('型号信息：',itemList)
+  
+            # 将列表转换为 DataFrame
+            df = pd.DataFrame(itemList)
+            df['报价'] = soldPrice
+            df['商品ID'] = itemId
+            return df
+
+        else:
+            print('保存失败',data) # 返回空的情况：itemId=624651727381
     def get_itemId(self,data:json) -> list:
         
         itemIds = []
         if data:
-            
-
 
             # 获取列表长度
             length = len(data["resultList"])
@@ -254,6 +331,8 @@ class Xianyu:
             filename = f'userinfo{item}.json'
             self.save_data(userInfo, filename)
 
+
+
 @app.get("/fetch_data/")
 def fetch_data(page_number: int):
     xianyu = Xianyu()
@@ -271,5 +350,7 @@ def fetch_userInfo(ItemId:str):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)   
+    # import uvicorn
+    # uvicorn.run(app, host="0.0.0.0", port=8000)   
+    xianyu = Xianyu()
+    data = xianyu.get_itemDetails('624651727381')
