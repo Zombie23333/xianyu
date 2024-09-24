@@ -347,7 +347,7 @@ class Xianyu:
         if df_list:
             concatenated_df = pd.concat(df_list, ignore_index=True)
             print(concatenated_df)
-            concatenated_df.to_csv('./data/outpu.csv',encoding='utf-8')
+            concatenated_df.to_csv('./data/output.csv',encoding='utf-8')
         else:
             print("没有数据可拼接。")
 
