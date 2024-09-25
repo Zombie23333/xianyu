@@ -35,7 +35,7 @@ class Xianyu:
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36 Edg/127.0.0.0',
 }
 
-    def get_token(self,url='https://www.goofish.com/search?q=macbook'):
+    def get_token(self, url='https://www.goofish.com/search?q=macbook'):
         
         # 默认d模式创建对象
         page = WebPage()
@@ -81,9 +81,9 @@ class Xianyu:
         
         return sign
 
-    def get_data(self,page:int) -> json:
+    def get_data(self, page:int) -> json:
 
-        data = {"pageNumber":page,"keyword":"macbook","fromFilter":False,"rowsPerPage":30,"sortValue":"","sortField":"","customDistance":"","gps":"","propValueStr":{},"customGps":""}
+        data = {"pageNumber":page,"keyword":"macbook M1","fromFilter":False,"rowsPerPage":30,"sortValue":"","sortField":"","customDistance":"","gps":"","propValueStr":{},"customGps":""}
         self.data = json.dumps(data).replace(' ', '')
         timestamp = int(time.time()*1000)
 
@@ -132,7 +132,7 @@ class Xianyu:
         with open(f'./data/{file_name}', 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
-    def get_userInfo(self,itemId:str) -> json:
+    def get_userInfo(self, itemId:str) -> json:
         
         url = f'https://www.goofish.com/item?id={itemId}'
 
@@ -204,7 +204,7 @@ class Xianyu:
             print('抓取失败，数据不完整')
             return response.text
 
-    def get_itemDetails(self,itemId:str) -> json:
+    def get_itemDetails(self, itemId:str) -> json:
 
         url = f'https://www.goofish.com/item?id={itemId}'
 
@@ -212,10 +212,10 @@ class Xianyu:
         '_m_h5_tk': '88e05480d6cc21133a9854b3f6c023f0_1725343615524',
         '_m_h5_tk_enc': 'c07401e74bc18be181c71eccdb1eee19',}
 
-        token,cookies = self.get_token(url)
+        # token,cookies = self.get_token(url) # 这里可以优化，重复请求token容易被风控
 
         timestamp = int(time.time()*1000)
-        timestamp_test = 1725322011710
+
 
 
         itemId = {"itemId":itemId}
@@ -224,7 +224,7 @@ class Xianyu:
         'data': itemId,
 }
         
-        sign = self.encrypt(token, timestamp, itemId) # 21f87a4d7daf3607d9f217af9d729d95
+        sign = self.encrypt(self.token, timestamp, itemId) # 21f87a4d7daf3607d9f217af9d729d95
         print(f"sign: {sign}")
 
 
@@ -250,7 +250,7 @@ class Xianyu:
         response = requests.post(
            'https://h5api.m.goofish.com/h5/mtop.taobao.idle.pc.detail/1.0/',
             params=params,
-            cookies=cookies,
+            cookies=self.cookies,
             headers=self.headers,
             data=data,
         )
@@ -263,7 +263,24 @@ class Xianyu:
             print('JSON 解析失败，返回结果：', response.text)
             return ''
 
-    def parse_Details(self,itemId:str,data:json):
+    def get_itemDetails_browser(self,itemId:str):
+        
+        page = WebPage()
+        url=f'https://www.goofish.com/item?id={itemId}'
+        page.get(url)
+        itemList = page.eles("xpath://div[@class='value--iaKzLDas']")
+        item_description = ''
+        for item in itemList:
+            item_description += item.text + " "
+
+        item_description = item_description.replace('\n', ' ')
+        
+        item_detail = {'itemId':itemId,'item_description':item_description}
+
+        print(item_detail)
+        return item_detail
+    
+    def parse_Details(self, itemId:str,data:json):
         
         # 路径 ["data"]["itemDO"]["itemLabelExtList"][2]["properties"]
         # 使用 dict.get() 方法来避免 KeyError
@@ -283,7 +300,7 @@ class Xianyu:
 
         else:
             print('保存失败',data) # 返回空的情况：itemId=624651727381
-    def get_itemId(self,data:json) -> list:
+    def get_itemId(self, data:json) -> list:
         
         itemIds = []
         if data:
@@ -310,7 +327,7 @@ class Xianyu:
             print('ItemId为空')
         return itemIds
 
-    def save_to_excel(self,ItemIds:list):
+    def save_to_excel(self, ItemIds:list):
         # 创建一个空的 DataFrame，用于存储所有请求的数据
         df = pd.DataFrame(columns=['卖出件数', '卖家昵称', '城市'])
         for itemId in ItemIds:
@@ -340,7 +357,7 @@ class Xianyu:
 
         for item in itemIds:
             data = self.get_itemDetails(item)
-            df = xianyu.parse_Details(item, data)
+            df = self.parse_Details(item, data)
             df_list.append(df)
             print(f'{item}已保存')
         # 拼接所有 DataFrame
@@ -369,8 +386,16 @@ def fetch_userInfo(ItemId:str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-if __name__ == '__main__':
-    # import uvicorn
-    # uvicorn.run(app, host="0.0.0.0", port=8000)   
+@app.get('/itemDetail_browser/')
+def itemDetail_browser(ItemId:str):
     xianyu = Xianyu()
-    xianyu.scrape_itemDetails(1)
+    try:
+        return xianyu.get_itemDetails_browser(ItemId)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)   
+    # xianyu = Xianyu()
+    # xianyu.get_itemDetails_browser('835222155286')
