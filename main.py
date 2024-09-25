@@ -81,9 +81,10 @@ class Xianyu:
         
         return sign
 
-    def get_data(self, page:int) -> json:
+    def get_data(self, keyword:str, page:int, searchFilter:str='') -> json:
+        # searchFilter="priceRange:2000,15000"
 
-        data = {"pageNumber":page,"keyword":"macbook M1","fromFilter":False,"rowsPerPage":30,"sortValue":"","sortField":"","customDistance":"","gps":"","propValueStr":{},"customGps":""}
+        data = {"pageNumber":page,"keyword":keyword,"fromFilter":False,"rowsPerPage":30,"sortValue":"","sortField":"","customDistance":"","gps":"","propValueStr":{},"customGps":"","searchFilter":searchFilter}
         self.data = json.dumps(data).replace(' ', '')
         timestamp = int(time.time()*1000)
 
@@ -287,19 +288,26 @@ class Xianyu:
         itemDo = data.get('data', {}).get('itemDO', {})
         itemList = itemDo.get('itemLabelExtList', '未知')
         soldPrice = itemDo.get('soldPrice',{})
-
+        
+        # 存放解析后的商品详情
+        result = {}
         if itemList != '未知':
-            # print('商品报价：',soldPrice)
-            # print('型号信息：',itemList)
-  
+            # 将每个条目的 properties 中的 ##XX 作为键，text 的值作为值，构建一个字典
+            for item in itemList:
+                properties = item["properties"].split("##")
+                for i in range(1, len(properties) - 1):
+                    short_key = properties[i].split(':')[0]  # 只保留 ':' 前面的部分
+                    result[short_key] = item["text"]
+
+
             # 将列表转换为 DataFrame
-            df = pd.DataFrame(itemList)
+            df = pd.DataFrame([result])
             df['报价'] = soldPrice
             df['商品ID'] = itemId
             return df
 
         else:
-            print('保存失败',data) # 返回空的情况：itemId=624651727381
+            print('保存失败',data) 
     def get_itemId(self, data:json) -> list:
         
         itemIds = []
@@ -348,8 +356,8 @@ class Xianyu:
             filename = f'userinfo{item}.json'
             self.save_data(userInfo, filename)
 
-    def scrape_itemDetails(self, page_number=1):
-        data = self.get_data(page_number)
+    def scrape_itemDetails(self, keyword:str,page_number:int=1):
+        data = self.get_data(keyword, page_number)
         itemIds = self.get_itemId(data)
         
         # 用于存储所有 DataFrame 的列表
@@ -398,4 +406,8 @@ if __name__ == '__main__':
     # import uvicorn
     # uvicorn.run(app, host="0.0.0.0", port=8000)   
     xianyu = Xianyu()
-    xianyu.scrape_itemDetails(2)
+    data = xianyu.get_data('macbook M1',1,searchFilter="priceRange:1500,20000;")
+    itemIds = xianyu.get_itemId(data)
+    print(itemIds)
+    itemDetail = xianyu.get_itemDetails(itemIds[0])
+    print(itemDetail)
