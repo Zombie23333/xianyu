@@ -263,7 +263,7 @@ class Xianyu:
             print('JSON 解析失败，返回结果：', response.text)
             return ''
 
-    def get_itemDetails_browser(self,itemId:str):
+    def get_itemDetails_browser(self,itemId:str) -> dict:
         
         page = WebPage()
         url=f'https://www.goofish.com/item?id={itemId}'
@@ -395,7 +395,7 @@ def itemDetail_browser(ItemId:str):
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)   
-    # xianyu = Xianyu()
-    # xianyu.get_itemDetails_browser('835222155286')
+    # import uvicorn
+    # uvicorn.run(app, host="0.0.0.0", port=8000)   
+    xianyu = Xianyu()
+    xianyu.scrape_itemDetails(1)
