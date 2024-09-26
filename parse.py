@@ -1,4 +1,4 @@
-
+import time
 import json
 import pandas as pd
 
@@ -12,7 +12,9 @@ def parse_Details(itemId:str,data:json):
     itemDo = data.get('data', {}).get('itemDO', {})
     itemList = itemDo.get('itemLabelExtList', '未知')
     soldPrice = itemDo.get('soldPrice',{})
-    
+    itemTitle = itemDo.get('title',{})
+    itemDesc = itemDo.get('desc',{})
+
     # 存放解析后的商品详情
     result = {}
     if itemList != '未知':
@@ -26,6 +28,8 @@ def parse_Details(itemId:str,data:json):
 
         # 将列表转换为 DataFrame
         df = pd.DataFrame([result])
+        df['标题'] = itemTitle
+        df['描述'] = itemDesc
         df['报价'] = soldPrice
         df['商品ID'] = itemId
         return df
@@ -39,7 +43,8 @@ df = parse_Details('1234567890',data)
 # 打印最终结果
 print(df)
 
+output_path = f'./data/itemDetail_{int(time.time())}.csv'
 # 导出csv
-df.to_csv('./data/itemDetail.csv')
+df.to_csv(output_path)
 # 导出html
 df.to_html('./data/itemDetail.html')

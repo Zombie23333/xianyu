@@ -288,7 +288,8 @@ class Xianyu:
         itemDo = data.get('data', {}).get('itemDO', {})
         itemList = itemDo.get('itemLabelExtList', '未知')
         soldPrice = itemDo.get('soldPrice',{})
-        
+        itemTitle = itemDo.get('title',{})
+        itemDesc = itemDo.get('desc',{})
         # 存放解析后的商品详情
         result = {}
         if itemList != '未知':
@@ -302,6 +303,8 @@ class Xianyu:
 
             # 将列表转换为 DataFrame
             df = pd.DataFrame([result])
+            df['标题'] = itemTitle
+            df['描述'] = itemDesc            
             df['报价'] = soldPrice
             df['商品ID'] = itemId
             return df
@@ -356,13 +359,15 @@ class Xianyu:
             filename = f'userinfo{item}.json'
             self.save_data(userInfo, filename)
 
-    def scrape_itemDetails(self, keyword:str,page_number:int=1):
-        data = self.get_data(keyword, page_number)
+    def scrape_itemDetails(self, keyword:str, page_number:int=1, searchFilter:str=''):
+        # 获取列表页商品详情
+        data = self.get_data(keyword, page_number, searchFilter)
+        # 获取itemIds,用以遍历详情页
         itemIds = self.get_itemId(data)
         
         # 用于存储所有 DataFrame 的列表
         df_list = []
-
+        # 遍历详情页
         for item in itemIds:
             data = self.get_itemDetails(item)
             df = self.parse_Details(item, data)
@@ -372,7 +377,9 @@ class Xianyu:
         if df_list:
             concatenated_df = pd.concat(df_list, ignore_index=True)
             print(concatenated_df)
-            concatenated_df.to_csv('./data/output.csv',encoding='utf-8')
+            output_path = f'./data/output_{int(time.time())}.csv'
+            concatenated_df.to_csv(output_path,encoding='utf-8')
+            return concatenated_df
         else:
             print("没有数据可拼接。")
 
@@ -406,8 +413,5 @@ if __name__ == '__main__':
     # import uvicorn
     # uvicorn.run(app, host="0.0.0.0", port=8000)   
     xianyu = Xianyu()
-    data = xianyu.get_data('macbook M1',1,searchFilter="priceRange:1500,20000;")
-    itemIds = xianyu.get_itemId(data)
-    print(itemIds)
-    itemDetail = xianyu.get_itemDetails(itemIds[0])
-    print(itemDetail)
+    xianyu.scrape_itemDetails('macbook M1',1,searchFilter="priceRange:1500,20000;")
+
