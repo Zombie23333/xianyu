@@ -375,10 +375,13 @@ class Xianyu:
             print(f'{item}已保存')
         # 拼接所有 DataFrame
         if df_list:
+            # 拼接所有表格
             concatenated_df = pd.concat(df_list, ignore_index=True)
             print(concatenated_df)
-            output_path = f'./data/output_{int(time.time())}.csv'
-            concatenated_df.to_csv(output_path,encoding='utf-8')
+            output_path_csv = f'./docs/output_{int(time.time())}.csv'
+            output_path_html = f'./docs/output_{int(time.time())}.html'
+            concatenated_df.to_csv(output_path_csv,encoding='utf-8')
+            concatenated_df.to_html(output_path_html)
             return concatenated_df
         else:
             print("没有数据可拼接。")
@@ -413,5 +416,7 @@ if __name__ == '__main__':
     # import uvicorn
     # uvicorn.run(app, host="0.0.0.0", port=8000)   
     xianyu = Xianyu()
-    xianyu.scrape_itemDetails('macbook M1',1,searchFilter="priceRange:1500,20000;")
+    for i in range(1,2):
+
+        xianyu.scrape_itemDetails('macbook M1',i,searchFilter="priceRange:1500,20000;")
 
