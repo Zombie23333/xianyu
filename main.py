@@ -10,6 +10,9 @@ from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
+
+
+
 class Xianyu:
     def __init__(self):
 
@@ -37,8 +40,10 @@ class Xianyu:
 
     def get_token(self, url='https://www.goofish.com/search?q=macbook'):
         
+        
         # 默认d模式创建对象
         page = WebPage()
+
         url='https://www.goofish.com/search?q=macbook'
         page.get(url)
         # 获取cookie
@@ -378,7 +383,7 @@ class Xianyu:
             # 拼接所有表格
             concatenated_df = pd.concat(df_list, ignore_index=True)
             print(concatenated_df)
-            output_path_csv = f'./docs/output_{int(time.time())}.csv'
+            output_path_csv = f'./data/output_{int(time.time())}.csv'
             output_path_html = f'./docs/output_{int(time.time())}.html'
             concatenated_df.to_csv(output_path_csv,encoding='utf-8')
             concatenated_df.to_html(output_path_html)
