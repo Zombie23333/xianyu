@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 50px 0;
+            font-size: 0.9em;
+            min-width: 400px;
+            border-radius: 5px 5px 0 0;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.15);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+        }
+        th {
+            background-color: #5c67f2;
+            color: #ffffff;
+            text-align: center;
+        }
+        thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: center;
+        }
+        tbody tr {
+            background-color: #ffffff;
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        td.description {
+            max-height: 50px; /* Adjust this value based on your preference */
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+        td.description:hover .content {
+            max-height: 1000px; /* Adjust this value based on the content */
+            transition: max-height 0.5s ease-in-out;
+        }
+        .content {
+            max-height: 50px;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .content p {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <table border="1" class="dataframe">
+        <!-- Table headers remain the same -->
+        <table border="1" class="dataframe">
+            <thead>
+              <tr style="text-align: right;">
+                <th></th>
+                <th>分类</th>
+                <th>型号</th>
+                <th>标题</th>
+                <th>描述</th>
+                <th>报价</th>
+                <th>商品ID</th>
+                <th>内存容量</th>
+                <th>品牌</th>
+                <th>成色</th>
+                <th>硬盘容量</th>
+                <th>屏幕尺寸</th>
+                <th>拆修</th>
+                <th>系列</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>0</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2023 16寸</td>
+                <td>收MacBookM1Pro</td>
+                <td>收MacBookM1Pro\n16寸的\n型号A2485\n运行内存16或者32g都可以\n硬盘1T最好\n有卖的彦祖们带价联系我</td>
+                <td>8000</td>
+                <td>838784081603</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>1</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 14寸</td>
+                <td>MacBookM1Pro电效98 16+512G 14寸</td>
+                <td>MacBookM1Pro电效98 16+512G 14寸\n2021款M1Pro 8+14核 A2442充电73次\n视网膜3K屏 /3024*1964分辨率/XDR高刷显示\n设计 剪辑 办公 学习 出差 旅行 编程 渲染\n性能强大/满足任何需求//实拍银色\n《闲鱼认证玩家-随便放心下单》\n都是现货原装机，外观有轻微磨蹭，价格实在！外观强迫症不建议下单，不卖有锁及监管机，看到的都是现货，支持上门看机自提，也可顺丰包邮发出。\n\n想进一步了解可语音及视频现场看机沟通！想低价买完美成色，也要担心组装翻新及暗病机哦！\n望综合理性对待，也希望大家买到理想的机型，\n给闲鱼一片和谐的购机场所！\n\n需要其它机型可咨询，实拍仓库货很多人\n#m1pro</td>
+                <td>7286</td>
+                <td>837759113089</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>轻微磕碰划痕</td>
+                <td>512GB</td>
+                <td>14-14.9英寸</td>
+                <td>无第三方维修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>2</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>新入macbookm2 闲置一台2017MacBook Pr</td>
+                <td>新入macbookm2 闲置一台2017MacBook Pro8+128 上面那是胶，可以清理干净</td>
+                <td>999</td>
+                <td>838317860074</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>轻微磕碰划痕</td>
+                <td>128GB</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>3</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>不是电脑贩</td>
+                <td>不是电脑贩\nmacbookm1\n128g\n拆开，没用过\n不退不换</td>
+                <td>3800</td>
+                <td>837822034955</td>
+                <td>64GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>128GB</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>4</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>苹果macbookm 1 512g 功能全部正常 带原装盒子</td>
+                <td>苹果macbookm 1 512g 功能全部正常 带原装盒子原装充电器一套 顺丰包邮</td>
+                <td>3690</td>
+                <td>837112842877</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>512GB</td>
+                <td>15-15.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>5</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 16寸</td>
+                <td>MacBookM1Pro 16寸16+500g</td>
+                <td>MacBookM1Pro 16寸16+500g\n2021款M1Pro 10+16核 A2485电效100\n视网膜3K屏 /3456*2234分辨率/XDR高刷显示\n设计 剪辑 办公 学习 出差 旅行 编程 影音\n一套充电器多带一根原装充电器\n爽快的送一个苹果鼠标\n#m1pro\n#macbookpro16寸</td>
+                <td>9000</td>
+                <td>837465670215</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>512GB</td>
+                <td>16-16.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>6</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 14寸</td>
+                <td>MacBookM1Pro 16+512G固态A2442</td>
+                <td>MacBookM1Pro 16+512G固态A2442\n2021款m1Pro原装8+14核固态/14寸\n视网膜3K屏 /3024*1964分辨率/XDR显示\n设计剪辑 办公 渲染 银色 旅行电效98%\n性能强大/满足任何需求/充电仅73次/实拍\n#m1pro\n\n都是现货原装机，外观有轻微磨蹭，价格实在！外观强迫症不建议下单，不卖有锁及监管机，看到的都是现货，支持上门看机自提，也可顺丰包邮发出。\n\n\n\n想进一步了解可闲鱼语音及视频现场看机沟通！想低价买完美成色，也要担心组装翻新及暗病机哦！\n\n望综合考虑对待，也希望大家买到理想的机型，给闲鱼一片和谐的购机场所！\n#m1pro</td>
+                <td>7235</td>
+                <td>837491904189</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>1t</td>
+                <td>14-14.9英寸</td>
+                <td>无第三方维修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>7</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Air（M1）2020 13寸</td>
+                <td>2020款macbookm1</td>
+                <td>2020款macbookm1\n买来没有出过卧室\n原装配件都在</td>
+                <td>3700</td>
+                <td>830907866951</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>8</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 14寸</td>
+                <td>MacBookM1Pro 16+512G固态 14寸</td>
+                <td>MacBookM1Pro 16+512G固态 14寸\n2021款Pro 原装8+14核 电效98/A2442\n视网膜3K屏 /3024*1964分辨率/XDR显示\n设计剪辑 办公 学习 /灰色 旅行 网课\n性能强大/满足任何需求/充电器65次\n\n都是现货原装机，外观有轻微磨蹭，价格实在！外观强迫症不建议下单，不卖有锁及监管机，看到的都是现货，支持上门看机自提，也可顺丰包邮发出。\n\n\n想进一步了解可闲鱼语音及视频现场看机沟通！想低价买完美成色，也要担心组装翻新及暗病机哦！\n\n望综合考虑对待，也希望大家买到理想的机型，给闲鱼一片和谐的购机场所！\n#m1pro\n#MacBookPro</td>
+                <td>7233</td>
+                <td>837418905192</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>轻微磕碰划痕</td>
+                <td>512GB</td>
+                <td>14-14.9英寸</td>
+                <td>无第三方维修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>9</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro（M1）2020 13寸</td>
+                <td>#苹果 macbookm1pro 2020年款苹果笔记本电脑</td>
+                <td>#苹果 macbookm1pro 2020年款苹果笔记本电脑   13.3寸m1pro   配置8+256   国行原装\n边角磕碰，电池88   #Apple/苹果 #笔记本电脑</td>
+                <td>3699</td>
+                <td>834858370902</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>轻微磕碰划痕</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>10</th>
+                <td>笔记本电脑</td>
+                <td>NaN</td>
+                <td>NBA2k23，Mac游戏！苹果电脑MacbookM1芯、M</td>
+                <td>NBA2k23，Mac游戏！苹果电脑MacbookM1芯、M2芯片.\n.\n适用于苹果电脑的M1、M2芯片.\n\n亲测可玩，很流畅，电脑也不是很热～\n虚拟产品！\n.\n云盘发货，发出不退不换\n看准再来！</td>
+                <td>3</td>
+                <td>690325608642</td>
+                <td>NaN</td>
+                <td>Apple/苹果</td>
+                <td>全新</td>
+                <td>NaN</td>
+                <td>16-16.9英寸</td>
+                <td>无任何拆修</td>
+                <td>Macbook</td>
+              </tr>
+              <tr>
+                <th>11</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>想买一台macbookm1max，16寸，最好是成都本地的，</td>
+                <td>想买一台macbookm1max，16寸，最好是成都本地的，个人的，要不有店铺的，售后有保障的！配置要求64g，1t就行，也可以接受配置低一些，但是内存必须1t</td>
+                <td>99999999</td>
+                <td>833991355194</td>
+                <td>6GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>1t</td>
+                <td>16-16.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>12</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Air 2020 13寸</td>
+                <td>苹果macbookM1 8➕256 几乎全新，没有瑕疵，自用</td>
+                <td>苹果macbookM1 8➕256 几乎全新，没有瑕疵，自用，但是吃灰了。。就只有一台，想要买全新的可以直接入手我这一台。。电池99➕</td>
+                <td>4000</td>
+                <td>807391039221</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>13</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>macbookM1 256+8GB 今年才买的基本全新 保修</td>
+                <td>macbookM1 256+8GB 今年才买的基本全新 保修期内\n包装 充电器都在</td>
+                <td>3999</td>
+                <td>834651218148</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>14</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Air 2022 13寸</td>
+                <td>22年macbookm2 在保循环次数65 无磕碰无拆修支持</td>
+                <td>22年macbookm2 在保循环次数65 无磕碰无拆修支持检测保定或者北京自提北京可送货上门 保定东站附近自提 长期在北京包装发票都有线下购买不急出不急出慢出随缘出</td>
+                <td>5000</td>
+                <td>741718581847</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>15</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>苹果MacBookM2</td>
+                <td>苹果MacBookM2\n8+256G\n京东自营 全新未拆封 颜色可选</td>
+                <td>5828</td>
+                <td>830741456143</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>NaN</td>
+                <td>256GB</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>16</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>自提，Apple/苹果 13 英寸 MacBookM2</td>
+                <td>自提，Apple/苹果 13 英寸 MacBookM2\n\n感兴趣的话点“我想要”和我私聊吧～</td>
+                <td>6000</td>
+                <td>825352244091</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>17</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>Macbookm1air全新 未拆封 8➕256</td>
+                <td>Macbookm1air全新 未拆封 8➕256\n深空灰\n感兴趣的话点“我想要”和我私聊吧～</td>
+                <td>4499</td>
+                <td>830711205928</td>
+                <td>NaN</td>
+                <td>Apple/苹果</td>
+                <td>全新</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>18</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>Macbookm1air全新 全新 全新未拆封</td>
+                <td>Macbookm1air全新 全新 全新未拆封\n8➕256 深空灰\n不经我手 \nApple产品京东自营旗舰店发货</td>
+                <td>4490</td>
+                <td>834977080603</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>19</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 14寸</td>
+                <td>MacBookM1Pro(8+14核)14寸2021款 型号</td>
+                <td>MacBookM1Pro(8+14核)14寸2021款 型号2442 GP3 配置M1-16G+512G固态/支持屏高刷/视网膜3K屏 /3024*1964分辨率/XDR显示 办公文档 性能强大，满足任何需求/原机成色A壳小花小凹 机器全原无暗病 带配件！</td>
+                <td>6999</td>
+                <td>835939072471</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>512GB</td>
+                <td>14-14.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>20</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2022 13寸</td>
+                <td>出macbookm2pro，256G2022年9月京东官方旗</td>
+                <td>出macbookm2pro，256G2022年9月京东官方旗舰店购买，原装电脑盒内含纸票齐全，平时就听歌追剧没外借没任何维修，支持验货，个人一手，无磕无碰无划痕。</td>
+                <td>6759</td>
+                <td>817011954817</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>21</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 16寸</td>
+                <td>出个人自用国行21款MacbookM1Pro16寸</td>
+                <td>出个人自用国行21款MacbookM1Pro16寸\n16G＋1TB\n成色嘎嘎新，自定义98-99新，价高价低是其次，可以谈，主要是买个放心。\n视网膜+显示屏，完美屏幕，电脑ad面贴膜使用，侧边没有磕碰，照片都是实拍，电池健康度为95％，循环计数101。\n2023年8月购入，主要用于写论文、看视频之类的轻微活动，风扇都没转过几次，所以性能我是体验不出来了，但屏幕素质和音响相当给力，秒杀所有pc机器。\n今年6月毕业后使用次数低，对本人而言性能过剩，故出售回血，给有需要的人使用。\n原装140w充电器，带有保护套，键盘贴有保护膜，成色嘎嘎新，箱说齐全。\n需要的朋友联系</td>
+                <td>8800</td>
+                <td>836206348121</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>1t</td>
+                <td>16-16.9英寸</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>22</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Air 2020 13寸</td>
+                <td>MacBookM1 air</td>
+                <td>MacBookM1 air \n电池健康88 基本没用</td>
+                <td>3400</td>
+                <td>836009690033</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>23</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>Macbookm1air全新+全新+全新未拆封</td>
+                <td>Macbookm1air全新+全新+全新未拆封\n8➕256+深空灰\n不经我手+\nApple产品京东自营旗舰店发货</td>
+                <td>4350</td>
+                <td>836059733166</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>24</th>
+                <td>笔记本电脑</td>
+                <td>NaN</td>
+                <td>apple的MacBookm1    256G，买回来没有怎</td>
+                <td>apple的MacBookm1    256G，买回来没有怎么玩过一般在看电视剧就没有怎么用过，充电次数才35次电池也是100%，几乎全新，包装盒什么都在，喜欢的可以私聊我。（屠龙刀别来）</td>
+                <td>4000</td>
+                <td>693442391923</td>
+                <td>NaN</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>NaN</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>25</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2021 14寸</td>
+                <td>MacBookM1Pro(8+14核)14寸2021款 型号</td>
+                <td>MacBookM1Pro(8+14核)14寸2021款 型号2442 配置M1-16G+512G固态/支持屏高刷/视网膜3K屏 /3024*1964分辨率/XDR显示 设计剪辑 办公 学习 性能强大，满足任何需求/原机成色A壳花 带电源十包包</td>
+                <td>7688</td>
+                <td>827596179207</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>细微磕碰划痕</td>
+                <td>512GB</td>
+                <td>14-14.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>26</th>
+                <td>笔记本电脑</td>
+                <td>MacBook Pro 2018 13寸</td>
+                <td>macbookpro 2018 13.3寸</td>
+                <td>macbookpro 2018 13.3寸\nA1989\n8加512 2.3hz i5\n九成新\n基本不经常使用，唯一缺点就是电池有点不耐用\n已还原macos 10系统 超级顺滑\n转手原因：因为想换macbookm1所以就想先出手</td>
+                <td>2320</td>
+                <td>836162700508</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>512GB</td>
+                <td>13-13.9英寸</td>
+                <td>NaN</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>27</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>MacBookM1pro 10+16 核 16G➕1T</td>
+                <td>MacBookM1pro 10+16 核 16G➕1T\n感兴趣的话点“我想要”和我私聊吧～</td>
+                <td>15999</td>
+                <td>825046514762</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>1t</td>
+                <td>14-14.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>28</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>苹果2020MacbookM1，女孩子长这么大第一次购买苹果</td>
+                <td>苹果2020MacbookM1，女孩子长这么大第一次购买苹果电脑，2024年8月15日在万达实体店购买，回来只使用过1次，一直原装盒装住，因不会操作系统使用，现诚意转出，4500</td>
+                <td>4500</td>
+                <td>827708028063</td>
+                <td>8GB</td>
+                <td>Apple/苹果</td>
+                <td>全新</td>
+                <td>256GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+              <tr>
+                <th>29</th>
+                <td>笔记本电脑</td>
+                <td>苹果笔记本</td>
+                <td>MacbookM2 16+512G，购于京东平台，箱说全，基</td>
+                <td>MacbookM2 16+512G，购于京东平台，箱说全，基本全新，使用次数很少，顺丰包邮。</td>
+                <td>8000</td>
+                <td>830699858998</td>
+                <td>16GB</td>
+                <td>Apple/苹果</td>
+                <td>几乎全新</td>
+                <td>512GB</td>
+                <td>13-13.9英寸</td>
+                <td>无任何拆修</td>
+                <td>NaN</td>
+              </tr>
+            </tbody>
+          </table>
+    </table>
+    <script>
+        // You can use JavaScript to handle the hover effect if you prefer
+        document.querySelectorAll('.description').forEach(function(td) {
+            td.addEventListener('mouseover', function() {
+                this.querySelector('.content').style.maxHeight = '1000px'; // Adjust this value based on the content
+            });
+            td.addEventListener('mouseout', function() {
+                this.querySelector('.content').style.maxHeight = '50px'; // Adjust this value based on your preference
+            });
+        });
+    </script>
+</body>
+</html>
