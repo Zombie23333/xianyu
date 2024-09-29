@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search and Display Items</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .search-input {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .search-input input[type='text'],
+        .search-input input[type='number'] {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .search-input button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-input button:hover {
+            background-color: #4cae4c;
+        }
+        #data-container {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        #error-message {
+            color: red;
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search for Items</h1>
+    <div>
+        <label for="page-input">Page Number:</label>
+        <input type="number" id="page-input" placeholder="Enter page number">
+    </div>
+    <div>
+        <label for="keyword-input">Keyword:</label>
+        <input type="text" id="keyword-input" placeholder="Enter keyword">
+    </div>
+    <button id="search-button">Search</button>
+    <div id="data-container">
+        <!-- 商品详情将被动态插入这里 -->
+    </div>
+    <div id="error-message">查询失败，请重试。</div>
+
+    <script>
+        document.getElementById('search-button').addEventListener('click', fetchData);
+
+        function fetchData() {
+            var pageNumber = document.getElementById('page-input').value;
+            var keyword = document.getElementById('keyword-input').value;
+            var errorMessage = document.getElementById('error-message');
+            errorMessage.style.display = 'none'; // 确保错误消息是隐藏的
+
+            fetch(`http://localhost:8000/fetch_data/?page_number=${pageNumber}&keyword=${keyword}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络响应错误');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && Array.isArray(data.resultList)) {
+                        var container = document.getElementById('data-container');
+                        container.innerHTML = ''; // 清空现有内容
+                        data.resultList.forEach(item => {
+                            var div = document.createElement('div');
+                            div.innerHTML = `City: ${item.data.city}, Title: ${item.data.title}, Description: ${item.data.description}, Sold Price: ${item.data.soldPrice}, Zhima Level: ${item.data.zhimaLevel}, Zhima Level Enum Str: ${item.data.zhimaLevelEnumStr}, Zhima Score: ${item.data.zhimaScore}`;
+                            container.appendChild(div);
+                        });
+                    } else {
+                        console.log(data)
+                        throw new Error('数据格式不正确');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMessage.style.display = 'block'; // 显示错误提示
+                    errorMessage.innerHTML = 'Error: ' + error.message;
+                });
+        }
+
+        function createErrorMessage() {
+            var errorMessage = document.createElement('div');
+            errorMessage.id = 'error-message';
+            errorMessage.innerHTML = '查询失败，请重试。';
+            errorMessage.style.color = 'red';
+            errorMessage.style.display = 'none';
+            document.body.appendChild(errorMessage);
+            return errorMessage;
+        }
+    </script>
+</body>
+</html>
