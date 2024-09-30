@@ -20,31 +20,74 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            color: #333;
+            color: #333; /* 字体颜色 */
+            font-size: 2.5em; /* 字体大小 */
+            font-weight: normal; /* 字体权重 */
+            text-align: center; /* 文字居中 */
+            margin-top: 20px; /* 顶部外边距 */
+            margin-bottom: 20px; /* 底部外边距 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* 文字阴影，增加立体感 */
         }
-        .search-input {
+
+        /* 可以添加一些媒体查询来响应式地调整标题大小 */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em; /* 小屏幕上的字体大小 */
+            }
+        }
+
+        /* 鼠标悬停时的效果 */
+        h1:hover {
+            transform: scale(1.05); /* 轻微放大 */
+            transition: transform 0.3s ease; /* 平滑过渡效果 */
+        }
+
+        /* 搜索框容器样式 */
+        .search-container {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            justify-content: center;
+            margin: 20px;
         }
-        .search-input input[type='text'],
-        .search-input input[type='number'] {
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+
+        /* 搜索框样式 */
+        .search-input {
+            padding: 10px; /* 内边距 */
+            font-size: 16px; /* 字体大小 */
+            border: 2px solid #ddd; /* 边框 */
+            border-radius: 30px; /* 圆角 */
+            outline: none; /* 移除聚焦时的默认外边框 */
+            transition: all 0.3s ease; /* 平滑过渡效果 */
+            width: 100%; /* 宽度100% */
+            box-sizing: border-box; /* 边框和内边距包含在宽度内 */
+            margin-bottom: 10px; /* 底部外边距 */
         }
-        .search-input button {
+
+        
+        /* 搜索按钮样式 */
+        .search-button {
             padding: 10px 20px;
-            background-color: #5cb85c;
+            font-size: 16px;
             color: white;
+            background-color: #007BFF; /* 按钮背景颜色 */
             border: none;
-            border-radius: 4px;
+            border-radius: 30px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+            height: 50px; /* 设置与输入框相同的高度 */
+            line-height: 30px; /* 设置行高以垂直居中文本 */
+            margin-left: 0; /* 移除左边距 */
+            margin-top: 10px; /* 上边距 */
+
+            &:hover {
+                background-color: #0056b3; /* 鼠标悬停时的背景颜色 */
+            }
         }
-        .search-input button:hover {
-            background-color: #4cae4c;
+
+        /* 当输入框聚焦时改变边框颜色 */
+        .search-input:focus {
+            border-color: #007BFF; /* 聚焦边框颜色 */
         }
+
         #data-container {
             margin-top: 20px;
             border: 1px solid #ddd;          /* 添加边框 */
@@ -82,15 +125,18 @@
 </head>
 <body>
     <h1>Search for Xianyu Items</h1>
-    <div>
-        <label for="page-input">Page Number:</label>
-        <input type="number" id="page-input" placeholder="Enter page number">
+    <div class="search-container">
+        <div>
+            <label for="page-input">Page Number:</label>
+            <input type="number" id="page-input" class='search-input' placeholder="Enter page number">
+        </div>
+        <div>
+            <label for="keyword-input">Keyword:</label>
+            <input type="text" id="keyword-input" class='search-input' placeholder="Enter keyword">
+        </div>
+        <button id="search-button" class="search-button">Search</button>
     </div>
-    <div>
-        <label for="keyword-input">Keyword:</label>
-        <input type="text" id="keyword-input" placeholder="Enter keyword">
-    </div>
-    <button id="search-button">Search</button>
+
     <div id="data-container">
         <!-- 商品详情将被动态插入这里 -->
     </div>
