@@ -47,6 +47,12 @@
         }
         #data-container {
             margin-top: 20px;
+            border: 1px solid #ddd;          /* 添加边框 */
+            border-radius: 10px;             /* 添加圆角 */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 添加阴影 */
+            background-color: #f9f9f9;      /* 添加背景色 */
+            padding: 10px;                   /* 内边距 */
+            overflow: hidden;                /* 隐藏溢出的内容 */
         }
         table {
             width: 100%;
@@ -75,7 +81,7 @@
     </style>
 </head>
 <body>
-    <h1>Search for Items</h1>
+    <h1>Search for Xianyu Items</h1>
     <div>
         <label for="page-input">Page Number:</label>
         <input type="number" id="page-input" placeholder="Enter page number">
@@ -91,42 +97,86 @@
     <div id="error-message">查询失败，请重试。</div>
 
     <script>
+        var sortingOrders = {}; // 存储每个头部的排序状态
         document.getElementById('search-button').addEventListener('click', fetchData);
 
         function fetchData() {
-            var pageNumber = document.getElementById('page-input').value;
-            var keyword = document.getElementById('keyword-input').value;
-            var errorMessage = document.getElementById('error-message');
-            errorMessage.style.display = 'none'; // 确保错误消息是隐藏的
+        var pageNumber = document.getElementById('page-input').value;
+        var keyword = document.getElementById('keyword-input').value;
+        var errorMessage = document.getElementById('error-message');
+        errorMessage.style.display = 'none'; // 确保错误消息是隐藏的
 
-            fetch(`http://localhost:8000/fetch_data/?page_number=${pageNumber}&keyword=${keyword}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('网络响应错误');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && Array.isArray(data.resultList)) {
-                        var container = document.getElementById('data-container');
-                        container.innerHTML = ''; // 清空现有内容
-                        data.resultList.forEach(item => {
-                            var div = document.createElement('div');
-                            div.innerHTML = `City: ${item.data.city}, Title: ${item.data.title}, Description: ${item.data.description}, Sold Price: ${item.data.soldPrice}, Zhima Level: ${item.data.zhimaLevel}, Zhima Level Enum Str: ${item.data.zhimaLevelEnumStr}, Zhima Score: ${item.data.zhimaScore}`;
-                            container.appendChild(div);
+        fetch(`http://localhost:8000/fetch_data/?page_number=${pageNumber}&keyword=${keyword}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络响应错误');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data && Array.isArray(data.resultList)) {
+                    var container = document.getElementById('data-container'); // 确保你有一个容器元素
+                    var table = document.createElement('table');
+                    table.style.width = '100%'; // 可以根据需要设置样式
+                    table.style.borderCollapse = 'collapse';
+
+                    // 创建表头
+                    var thead = document.createElement('thead');
+                    var headerRow = document.createElement('tr');
+                    var headers = ['city', 'title', 'description', 'soldPrice', 'zhimaLevel', 'zhimaLevelEnumStr', 'zhimaScore'];
+
+
+                    headers.forEach(function(headerText, index) { // 遍历表头标题数组
+                        var header = document.createElement('th');
+                        header.textContent = headerText;
+                        header.style.border = '1px solid #ddd';
+                        header.style.padding = '8px';
+                        headerRow.appendChild(header);
+                        // 因为事件监听器是异步的，所以需要捕获当前迭代的索引
+                        header.addEventListener('click', (function(headerText, currentIndex) {
+                            return function() {
+                                sortTable(this, currentIndex);
+                            };
+                        })(headerText, index)); // 注意这里的index
+
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+
+                    // 创建表体
+                    var tbody = document.createElement('tbody');
+                    data.resultList.forEach(function(item) { // 遍历每个数据项
+                        var row = document.createElement('tr');
+                        headers.forEach(function(headerText) { // 再次遍历表头标题数组
+                            var key = headerText
+                            var cell = document.createElement('td');
+                            if (item.data.hasOwnProperty(key)) {
+                                cell.textContent = item.data[key]; // 从item.data中安全地获取对应的值
+                            } else {
+                                cell.textContent = 'N/A'; // 如果属性不存在，显示'N/A'
+                            }
+                            cell.style.border = '1px solid #ddd';
+                            cell.style.padding = '8px';
+                            row.appendChild(cell);
                         });
-                    } else {
-                        console.log(data)
-                        throw new Error('数据格式不正确');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    errorMessage.style.display = 'block'; // 显示错误提示
-                    errorMessage.innerHTML = 'Error: ' + error.message;
-                });
-        }
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
 
+                    // 将表格添加到容器中
+                    container.innerHTML = ''; // 清空容器内容
+                    container.appendChild(table);
+                } else {
+                    console.log(data)
+                    throw new Error('数据格式不正确');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block'; // 显示错误提示
+                errorMessage.innerHTML = 'Error: ' + error.message;
+            });
+    }
         function createErrorMessage() {
             var errorMessage = document.createElement('div');
             errorMessage.id = 'error-message';
@@ -135,6 +185,37 @@
             errorMessage.style.display = 'none';
             document.body.appendChild(errorMessage);
             return errorMessage;
+        }
+        // 定义 sortTable 函数
+        function sortTable(headerClicked, columnIndex) {
+            var tbody = headerClicked.parentNode.parentNode;
+            var rows = Array.from(tbody.children);
+            var isAscending = sortingOrders[columnIndex] === 'asc';
+
+            rows.sort(function(a, b) {
+                var valueA = a.children[columnIndex].textContent.trim();
+                var valueB = b.children[columnIndex].textContent.trim();
+
+                if (!isNaN(valueA) && !isNaN(valueB)) {
+                    valueA = parseFloat(valueA);
+                    valueB = parseFloat(valueB);
+                }
+
+                if (valueA < valueB) {
+                    return isAscending ? -1 : 1;
+                }
+                if (valueA > valueB) {
+                    return isAscending ? 1 : -1;
+                }
+                return 0;
+            });
+
+            while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+            rows.forEach(function(row) {
+                tbody.appendChild(row);
+            });
+
+            sortingOrders[columnIndex] = isAscending ? 'desc' : 'asc';
         }
     </script>
 </body>
